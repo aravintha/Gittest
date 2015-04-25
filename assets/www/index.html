@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="msapplication-tap-highlight" content="no" />
+<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<!-- style sheets -->
+<link href="lib/jquery.mobile-1.4.5.css" rel="stylesheet">
+<link href="lib/jqm-datebox-1.4.5.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
+<!-- cordova and jqm and translate js -->
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="lib/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="lib/jqm.date.picker.js"></script>
+<script type="text/javascript" src="lib/i18next-1.7.4.js"></script>
+
+<!-- custom js -->
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/language.js"></script>
+<script type="text/javascript" src="js/backgroundService.js"></script>
+<script type="text/javascript" src="js/call.background.service.js"></script>
+<script type="text/javascript" src="js/save.order.details.js"></script>
+<script type="text/javascript" src="js/http.request.js"></script>
+<script type="text/javascript" src="js/call.natvie.plugins.js"></script>
+<script type="text/javascript" src="js/database.create.query.js"></script>
+<script type="text/javascript" src="js/logger.js"></script>
+<script type="text/javascript" src="js/select.query.js"></script>
+<script type="text/javascript" src="js/display.orderlist.js"></script>
+<script type="text/javascript" src="js/edit.orderlist.js"></script>
+<script type="text/javascript" src="js/db.handler.js"></script>
+<script type="text/javascript" src="js/query.results.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+	<div data-role="page" id="initpage"></div>
+	<!-- login page start -->
+	<div data-role="page" id="loginpage">
+		<div data-role="header" data-theme="b" data-position="fixed"
+			data-tap-toggle="false" data-hide-during-focus="false">
+			<div class="ui-btn-left">
+				<a id="appversionbtn" data-rel="popup" href="#appversionpanel"><img
+					src="img/logo1.png" width="50" height="30"></a>
+			</div>
+			<h1 data-i18n="loginheader"></h1>
+		</div>
+		<!-- application version popup -->
+		<div data-role="popup" id="appversionpanel"
+			class="appversionpopup">
+			<div class="ui-field-contain" align="center">
+				<img alt="" src="img/logo1.png" width="100" height="100">
+				<p id="appname"></p>
+				<p id="appversion"></p>
+			</div>
+		</div>
+		<!-- application version popup end -->
+		<div data-role="main" class="ui-content">
+			<div class="ui-field-contain">
+				<div class="ui-field-contain" align="center">
+					<img alt="" src="img/logo1.png" width="300" height="200">
+				</div>
+				<label for="username" data-i18n="username"></label> <input
+					type="text" id="username" ><br>
+			</div>
+			<div class="ui-field-contain">
+				<label for="password" data-i18n="password"></label> <input
+					type="password" id="password" >
+			</div>
+			<div class="ui-field-contain">
+				<label for="selectlanguage" data-i18n="selectlanguage"></label> <select
+					id="selectlanguage" onchange="selectLangauge();">
+					<option value="norway">Norsk-Norwegian</option>
+					<option value="english">English</option>
+
+				</select>
+			</div>
+			<div class="ui-field-contain">
+				<button id="loginButton" data-i18n="loginheader"></button>
+			</div>
+		</div>
+	</div>
+	<!-- login page end -->
+	<!-- list page start-->
+	<div data-role="page" id="listpage">
+
+		<div data-role="header" data-theme="b" data-position="fixed"
+			data-tap-toggle="false" data-hide-during-focus="false" style="zoom: 1.2;">
+			<div class="ui-btn-left">
+				<a id="appversionbtn" data-rel="popup" href="#appversionpanel1"><img
+					src="img/logo1.png" width="50" height="30"></a>
+
+			</div>
+
+			<h1 data-i18n="listpageheader"></h1>
+			<div class="ui-btn-right">
+				<!-- <a class="ui-btn ui-icon-plus ui-btn-icon-left" data-i18n="create"
+					href="#ordereditpage"></a> -->
+				<a class="ui-btn ui-icon-refresh ui-btn-icon-left"
+					data-i18n="syncfromserver" id="syncfromserver"></a> <a
+					id="startService" class="ui-btn ui-icon-recycle ui-btn-icon-left"
+					data-i18n="startService"></a> <a
+					class="ui-btn ui-icon-delete ui-btn-icon-left" data-i18n="logout"
+					id="logout"></a>
+			</div>
+		</div>
+		<!-- application version popup -->
+		<div data-role="popup" id="appversionpanel1"
+			class="appversionpopup">
+			<div class="ui-field-contain" align="center">
+				<img alt="" src="img/logo.png" width="100" height="100">
+				<p id="appname1"></p>
+				<p id="appversion1"></p>
+			</div>
+		</div>
+		<!-- application version popup end -->
+		<div data-role="main" class="ui-content">
+			<!-- listview for order display  -->
+			<ul data-role="listview" id="orderlistview"></ul>
+		</div>
+	</div>
+	<!-- list page end -->
+	<!-- order edit page start -->
+	<div data-role="page" id="ordereditpage">
+		<!-- order edit page header -->
+		<div data-role="header" data-theme="b" data-role="header"
+			data-position="fixed" data-tap-toggle="false"
+			data-hide-during-focus="false" style="zoom: 1.1;">
+			<a id="sync" data-i18n="sync"
+				class="ui-btn ui-icon-refresh ui-btn-icon-left"></a>
+
+			<h1 data-i18n="editpageheader"></h1>
+			<div class="ui-btn-right">
+				<a data-i18n="cancel" class="ui-btn ui-icon-delete ui-btn-icon-left"
+					id="cancel"></a> <a id="savebtn" data-i18n="save"
+					class="ui-btn ui-icon-check ui-btn-icon-left "></a>
+			</div>
+		</div>
+		<!-- order edit page header end -->
+		<div data-role="main" class="ui-content">
+			<input type="hidden" id="rowId" readonly="readonly"> <input
+				type="hidden" id="orderAddedDate" readonly="readonly">
+				<!-- grid start here  -->
+			<div class="ui-grid-b">
+				<div class="ui-block-a gridMaxWidth">
+					<div class="ui-field-contain">
+						<label data-i18n="orderid" class="labelfont"></label> <label
+							id="orderid"></label>
+					</div>
+				</div>
+				<div class="ui-block-b gridMinWidth" ></div>
+				<div class="ui-block-c gridMaxWidth">
+					<div class="ui-field-contain">
+						<label data-i18n="addedby" class="labelfont"></label> <label
+							id="addedby"></label>
+					</div>
+				</div>
+
+				<div class="ui-block-a gridMaxWidth">
+					<div class="ui-field-contain">
+						<label data-i18n="contact" class="labelfont"></label> <label
+							id="contact"></label>
+					</div>
+				</div>
+				<div class="ui-block-b gridMinWidth" ></div>
+				<div class="ui-block-c gridMaxWidth">
+					<div class="ui-field-contain">
+						<label class="labelfont" data-i18n="phonenumber"></label>
+						<a data-role="none" id="phonenumber"></a>
+					</div>
+				</div>
+				<div class="ui-block-a gridMaxWidth" >
+					<div class="ui-field-contain">
+						<label data-i18n="status" class="labelfont"></label> <label
+							id="status"></label>
+					</div>
+				</div>
+				<div class="ui-block-b gridMinWidth" ></div>
+				<div class="ui-block-c gridMaxWidth" >
+					<div class="ui-field-contain">
+						<label data-i18n="deadline" class="labelfont"></label> <label
+							id="deadline"></label>
+					</div>
+				</div>
+			</div>
+			<!-- grid end here -->
+			<br>
+			<!-- <label data-i18n="templateDetails"
+				style="font-weight: bold;"></label> -->
+			<!-- template table start -->
+			<div id="templatetablediv">
+				<a class="ui-btn ui-icon-plus ui-btn-icon-notext ui-corner-all"
+					id="templateAddBtn" onclick="cloneTemplateTable('add');"></a>
+				<table style="border: none; width: 100%;" id="templatetable">
+					<tbody id="templatetablebody">
+						<tr id="templatetableheader">
+							<th align="left" data-i18n="templatename"></th>
+							<th align="left" data-i18n="templatecode"></th>
+							<th align="left" data-i18n="filename"></th>
+							<th align="left" data-i18n="deleted"></th>
+						</tr>
+					</tbody>
+				</table>
+				<input type="hidden" id="templateTableRowCount">
+			</div>
+			<!-- template table end -->
+		</div>
+	</div>
+	<!-- order edit page end -->
+</body>
+</html>
