@@ -11,7 +11,7 @@ function getOrderList(userId) {
 }
 // get order details
 function getOrderDetails(orderId,str) {
-	var getOrderQuery = " * FROM `order` where order_id='"
+	var getOrderQuery = " * FROM `order` where id='"
 			+ orderId + "'";
 	transactionSelect(getOrderQuery, str);
 }

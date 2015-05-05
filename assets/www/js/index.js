@@ -200,8 +200,8 @@ getServiceStatus();
 // list page show
 $(document).on("pagebeforeshow", "#listpage", function() {
 	setLanguage();
-	$("#appname1").text(PROJECT_NAME);
 	
+	$("#appname1").text(PROJECT_NAME);
 	userId = storeObject.userId;
 	connectionStatus = navigator.onLine ? 'online' : 'offline';
 	if (storeObject.orderNumber && connectionStatus == "online") {
@@ -211,6 +211,30 @@ $(document).on("pagebeforeshow", "#listpage", function() {
 		getOrderList(userId);
 	}
 });
+$(document).on("pageshow", "#listpage", function() {
+	listPageHeaderStyle();
+});
+
+function listPageHeaderStyle(){
+	var height = $(window).height();
+	var width = $(window).width();
+	
+	if (height < 800 && width > 900) {
+		$("#listHeader").css("margin", ".6em 13% -.5em 30%");
+	} else {
+		$("#listHeader").css("margin", ".6em 15% -.5em 20%");
+	}
+	window.addEventListener("orientationchange", listPageDeviceOrientation,true);
+}
+
+function listPageDeviceOrientation(e) {
+	var width = $(window).width();
+	if (window.orientation == -90 || window.orientation == 90 ) {
+		$("#listHeader").css("margin", ".6em 13% -.5em 30%");
+	} else {
+		$("#listHeader").css("margin", ".6em 15% -.5em 20%");
+	}
+}
 
 // get orders from server
 function getOrderNumbersFromLocal(userId) {
@@ -303,7 +327,7 @@ function serverResponseForOrders(response) {
 							jsonParsed.results[i].contact,
 							jsonParsed.results[i].phone_number,
 							formatDate(jsonParsed.results[i].deadline,"dd.mm.yyyy")];
-					
+					transactionInsert(orderQuery, orderValues);
 					var orderFileDetails = jsonParsed.results[i].order_files;
 					for ( var j = 0; j < orderFileDetails.length; j++) {
 						var orderFiles = orderFileDetails[j].file;
@@ -316,7 +340,8 @@ function serverResponseForOrders(response) {
 								orderFileDetails[j].order_id,
 								orderFileDetails[j].template_code,
 								orderFileDetails[j].name, orderFiles, "0",
-								orderFileDetails[j].added_date, orderFileDetails[j].edited_date ];
+								orderFileDetails[j].added_date, getCurrentTime() ];
+						
 						transactionInsert(templateQuery, templateValues);
 						/*customPlugin.createEvent("", fileDownloadFail, "live",
 								{
@@ -327,7 +352,7 @@ function serverResponseForOrders(response) {
 								});*/
 						downloadFile(BASE_URL + "/" + orderFileJSON[0].name,filename,TEMPLATE_FILE_DIRECTORY);
 					}
-					transactionInsert(orderQuery, orderValues);
+					
 
 				}
 

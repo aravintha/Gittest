@@ -32,6 +32,7 @@ function callLanguage(path) {
 		saveLocally = t("savelocally");
 		loginmsg = t("loginmsg");
 		logoutmsg = t("logoutmsg");
+		logoutTxt = t("logout");
 		deleteMsg = t("confirmdelete");
 		toggleColumnText = t("showcolumn");
 		openorderDetails = t("openorderdetails");

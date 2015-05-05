@@ -41,7 +41,7 @@ function saveCheckList() {
 // template table values
 function insertTemplateTableValues(userId){
 	
-	var orderid =$("#orderid").html();
+	var orderid = $("#rowId").val();
 	
 	var templateTableRowCount = $("#templateTableRowCount").val();
 	for ( var i = 0; i < templateTableRowCount; i++) {
@@ -63,6 +63,7 @@ function insertTemplateTableValues(userId){
 		}
 		
 		var modifiedDate = getCurrentTime();
+		
 		if (templateRowAddedDate) {
 		} else {
 			templateRowAddedDate = modifiedDate;
@@ -91,12 +92,12 @@ function insertTemplateTableValues(userId){
 
 // sync
 function getValuesForSync() {
-	var orderid = $("#orderid").html();
+	var orderid = $("#rowId").val();
 	getOrderDetails(orderid, "syncOrders")
 }
 // construct machine values array
 function constructOrderDetailsForSync(results) {
-	orderArray = [];
+	orderArray = "";
 	
 	if (results.rows.length > 0) {
 		var editedDate = results.rows.item(0).edited_date;
@@ -106,7 +107,7 @@ function constructOrderDetailsForSync(results) {
 			editedDate = date.format("yyyy-mm-dd HH:MM:ss");
 		}
 		
-		orderArray.push({
+		orderArray = {
 			"id":results.rows.item(0).id,
 			"order_id" : results.rows.item(0).order_id,
 			"user_id":results.rows.item(0).user_id,
@@ -114,9 +115,11 @@ function constructOrderDetailsForSync(results) {
 			"added_date":results.rows.item(0).added_date,
 			"edited_date":editedDate,
 			"status":"COMPLETED"
-		});
-		var orderId = $("#orderid").html();
-		getTemplateTableDetails(storeObject.userId,orderId,"getTemplateDetailsForSync");
+		};
+		
+		//var orderId = $("#orderid").html();
+		var rowId = $("#rowId").val();
+		getTemplateTableDetails(storeObject.userId,rowId,"getTemplateDetailsForSync");
 	}
 
 }
@@ -131,6 +134,7 @@ function constructTemplateDetailsForSync(results){
 		result = results;
 	}
 	var findFileSizeCount = 0;
+	
 	if(result.rows.length > 0){
 		for(var i = 0 ; i < result.rows.length;i++){
 			
@@ -148,11 +152,10 @@ function constructTemplateDetailsForSync(results){
 					window.resolveLocalFileSystemURI(root+TEMPLATE_FILE_DIRECTORY+"/"+templateFileArray[findFileSizeCount], function(fileEntry){
 												
 						fileEntry.file(function(fileObj) { 
-								
-							
 							
 							fileSize = fileObj.size;
 						var orderFileJSON = eval('('+ result.rows.item(checkFileSizeCount).file+ ')');
+						
 						var filename = /[^/]*$/.exec(orderFileJSON[0].name)[0];
 						var fileArray = [];
 						fileArray.push({
@@ -163,8 +166,10 @@ function constructTemplateDetailsForSync(results){
 							"searchStr":filename
 						});
 						fileDetails = JSON.stringify(fileArray);
-						var date = new Date(result.rows.item(checkFileSizeCount).edited_date);
-						var editedDate = date.format("yyyy-mm-dd HH:MM:ss");
+						
+						var edit_date = new Date(result.rows.item(checkFileSizeCount).edited_date);
+						var editedDate = edit_date.format("yyyy-mm-dd HH:MM:ss");
+						
 						var addedDate = result.rows.item(checkFileSizeCount).added_date;
 						if (result.rows.item(checkFileSizeCount).added_date.toString().indexOf('-') > 0) {
 						}else{
@@ -231,6 +236,7 @@ function startSyncToServer() {
 		commonI18init("syncOffline");
 	} else {
 		var orderid = $("#orderid").html();
+		
 		var newdata = {
 			'order_id' : orderid,
 			'orderDetails' : orderArray,
@@ -239,6 +245,7 @@ function startSyncToServer() {
 		var params = "service=update&user_id=" + storeObject.userId
 				+ "&order_id=" + orderid + "&data="
 				+ JSON.stringify(newdata);
+		
 		createLogFile(params);
 		uploadTemplateFiles();
 		callServer(DATA_URL, params, METHOD, checkUpdated);
@@ -248,8 +255,10 @@ function startSyncToServer() {
 function checkUpdated(response) {
 	var opts = eval('(' + response + ')');
 	if (opts.status == "success") {
-		var orderid =$("#orderid").html();
-		transactionDelete(" `order` where order_id='"+orderid+"'");
+		//var orderid =$("#orderid").html();
+		var orderid = $("#rowId").val();
+		transactionDelete(" `order` where id='"+orderid+"'");
+		//console.log("orderFileDetails where order_id='"+orderid+"'");
 		transactionDelete(" orderFileDetails where order_id='"+orderid+"'");
 		setTimeout(function() {
 			storeObject.orderNumber = "";

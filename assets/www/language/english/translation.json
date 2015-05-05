@@ -11,7 +11,7 @@
 	"passwordValidation":"Fill the password.",
 	"save":"Save",
 	"selectlanguage":"Select Language",
-	"listpageheader":"List",
+	"listpageheader":"Orders",
 	"create":"Create",
 	
 	"logout":"Logout",
@@ -51,6 +51,7 @@
 	 "address":"Address:",
 	 "status":"Status:",
 	 "addedby":"Added by:",
-	 "syncfailmessage":"Internet connection not available. Data's are stored locally."
-
+	 "syncfailmessage":"Internet connection not available. Data's are stored locally.",
+	"selectTemplate":"Choose checklist",
+	"filedownload":"File Downloaded Successfully"
 }

@@ -13,7 +13,7 @@ function editOrderList(results) {
 		$("#orderid").html(results.rows.item(0).order_id);
 		$("#addedby").html(results.rows.item(0).added_by);
 		$("#contact").html(results.rows.item(0).contact);
-		//$("#phonenumber").html(results.rows.item(0).phonenumber);
+		$("#phonenumber").html(results.rows.item(0).phone_number);
 		$("#phonenumber").attr("href", "tel:"+results.rows.item(0).phone_number);
 		$("#status").html(results.rows.item(0).status);
 		if(results.rows.item(0).deadline){
@@ -36,7 +36,8 @@ function displayTemplateName(results) {
 	templateTableRowId = "1";
 	var orderId = storeObject.orderNumber;
 	userId = storeObject.userId;
-	getTemplateTableDetails(userId, orderId, "getTemplateDetails");
+	var id = $("#rowId").val();
+	getTemplateTableDetails(userId, id, "getTemplateDetails");
 
 }
 // display template details in table
@@ -76,7 +77,7 @@ function cloneTemplateTable(param) {
 	if (param) {
 		templateTableClone += '<select id=tempName'
 				+ templateTableRowId
-				+ ' onchange=getTempate(this.id);><option>Select Template</option>';
+				+ ' onchange=getTempate(this.id);><option>'+i18n.t("selectTemplate")+'</option>';
 		for ( var i = 0; i < templateTitleArray.length; i++) {
 			templateTableClone += "<option>" + templateTitleArray[i]
 					+ "</option>";
@@ -185,10 +186,10 @@ function downloadTemplate(results) {
 						//$("#filename" + rowId[2]).html(randomFileName);
 						var templateName = results.rows.item(0).name;
 						var templateCode = $("#templateCode" + rowId[2]).html();
-						
+						var order_id = $("#orderid").html();
 						fileArray.push({
 							"name" : "files/pdf/"+randomFileName,
-							"usrName" : orderId+"_"+templateCode+"_"+getRandomName(3),
+							"usrName" : order_id+"_"+templateCode+"_"+getRandomName(3),
 							"size" : theFile.size,
 							"type":"application/pdf",
 							"searchStr":randomFileName
@@ -198,6 +199,7 @@ function downloadTemplate(results) {
 						};
 						
 						$("#fullfileJSON" + rowId[2]).html(JSON.stringify(fileArray));
+						
 						var filename = $("#fullfileJSON" + rowId[2]).html();
 						$("#filename"+rowId[2]).html(randomFileName);
 						var deleted = $("#templatedeleted" + rowId[2]).val();
@@ -218,8 +220,9 @@ function downloadTemplate(results) {
 							templateRowAddedDate = modifiedDate;
 						}
 						userId = storeObject.userId;
+						var id = $("#rowId").val();
 						var insertQuery = "INSERT OR REPLACE  INTO orderFileDetails(id ,user_id,added_by,order_id,template_code,name,file,deleted,added_date,edited_date) values(?,?,?,?,?,?,?,?,?,?)";
-						var insertValues = [ templateRowId, userId, userId, orderId,
+						var insertValues = [ templateRowId, userId, userId, id,
 								templateCode, templateName, filename, deleted,
 								templateRowAddedDate, modifiedDate ];
 						transactionInsert(insertQuery, insertValues);
@@ -238,7 +241,7 @@ function downloadTemplate(results) {
 						}, 2000);
 					
 						
-						alert("File Downloaded Successfully");
+						alert(i18n.t('filedownload'));
 					}, function(e) {
 						alert("fileTransferFail" + JSON.stringify(e));
 					});

@@ -60,8 +60,8 @@ public class DatabaseHandler {
 	final String APP_NAME = "offlinepdf";
 	final String FOLDER_NAME = "offlinepdf";
 	final String DIRECTOTY_SEPARATOR = "/";
-	public static String BASE_URL = "http://192.168.1.4/offline-pdf/";
-	//public static String BASE_URL = "http://checklist.solutionapp.no/";
+	//public static String BASE_URL = "http://192.168.1.4/offline-pdf/";
+	public static String BASE_URL = "http://checklist.solutionapp.no/";
 
 	String templateFileDir = DIRECTOTY_SEPARATOR.concat(FOLDER_NAME).concat(
 			"/pdf/");
@@ -70,6 +70,7 @@ public class DatabaseHandler {
 	String DB_PATH_18 = "/app_webview/databases/file__0/";
 	String DB_PATH_17 = "/app_database/file__0/";
 	String DB_PATH = "";
+	String order_id = "";
 	String fileSendUrl = BASE_URL.concat("offline_pdf_apiupload.php");
 	public static String dataSendUrl = BASE_URL.concat("offline_pdf_apiservice.php");
 
@@ -243,9 +244,10 @@ public class DatabaseHandler {
 								"yyyy-MM-dd kk:mm:ss");
 						Log.e("edit date", date);
 						orderHashMap.put("edited_date", date);
-						String orderId = cursor.getString(cursor
+						order_id = cursor.getString(cursor
 								.getColumnIndex("order_id"));
-						getTemplateValues(orderId);
+						String orderRowId = cursor.getString(cursor.getColumnIndex("id"));
+						getTemplateValues(orderRowId);
 					}
 				} while (cursor.moveToNext());
 			} else {
@@ -349,13 +351,15 @@ public class DatabaseHandler {
 
 			Log.e("synced order", orderId);
 			HashMap<String, Object> data = new HashMap<String, Object>();
-			data.put("order_id", orderId);
+			Log.e("ord",order_id);
+			data.put("order_id", order_id);
 			data.put("orderDetails", orderHashMap);
 			data.put("orderFileDetails", orderDetailAL);
 			JSONObject jObj = new JSONObject(data);
 			HttpClient httpclient = new DefaultHttpClient();
 
 			HttpPost httppost = new HttpPost(dataSendUrl);
+			
 			httppost.setHeader("Accept-Charset", "utf-8");
 
 			// upload order files
@@ -372,7 +376,7 @@ public class DatabaseHandler {
 				nameValuePairs.add(new BasicNameValuePair("backup", "1"));
 				nameValuePairs
 						.add(new BasicNameValuePair("user_id", userId));
-				nameValuePairs.add(new BasicNameValuePair("order_id", orderId));
+				nameValuePairs.add(new BasicNameValuePair("order_id", order_id));
 				nameValuePairs.add(new BasicNameValuePair("data", jObj
 						.toString()));
 				nameValuePairs.add(new BasicNameValuePair("imei", identifier));
