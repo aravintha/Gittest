@@ -189,10 +189,10 @@ function downloadTemplate(results) {
 						var order_id = $("#orderid").html();
 						fileArray.push({
 							"name" : "files/pdf/"+randomFileName,
-							"usrName" : order_id+"_"+templateCode+"_"+getRandomName(3),
+							"usrName" : fileName,
 							"size" : theFile.size,
 							"type":"application/pdf",
-							"searchStr":randomFileName
+							"searchStr":fileName
 						});
 						var newData = {
 								"file" : fileArray
@@ -239,9 +239,7 @@ function downloadTemplate(results) {
 								transition : 'none'
 							});
 						}, 2000);
-					
 						
-						alert(i18n.t('filedownload'));
 					}, function(e) {
 						alert("fileTransferFail" + JSON.stringify(e));
 					});

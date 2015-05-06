@@ -386,6 +386,7 @@ public class DatabaseHandler {
 				HttpResponse httpResponse = httpclient.execute(httppost);
 				String response = EntityUtils
 						.toString(httpResponse.getEntity());
+				Log.e("response", response);
 				try {
 					JSONObject myObject = new JSONObject(response);
 

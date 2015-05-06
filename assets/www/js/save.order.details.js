@@ -129,12 +129,12 @@ function constructTemplateDetailsForSync(results){
 	templateFileArray = [];
 	var checkFileSizeCount = 0;
 	var orderFilesDetailsLength = results.rows.length;
-	var result;
+	var result = "";
 	if(results.rows.length > 0 ){
 		result = results;
 	}
 	var findFileSizeCount = 0;
-	
+	if(result){
 	if(result.rows.length > 0){
 		for(var i = 0 ; i < result.rows.length;i++){
 			
@@ -222,6 +222,9 @@ function constructTemplateDetailsForSync(results){
 			}
 		}
 	}
+	} else {
+		startSyncToServer();
+	}
 	
 }
 
@@ -266,10 +269,10 @@ function checkUpdated(response) {
 			$.mobile.pageContainer.pagecontainer("change", "#listpage", {});
 		}, 2000);
 	} else {
-		alert("Upload error");
+		alert("Upload error :" +opts.results);
 	}
 }
-
+// upload checkilist file
 function uploadTemplateFiles(){
 	if(templateFileArray.length > 0){
 		templateFileArrayCount = templateFileArray.length;

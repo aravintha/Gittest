@@ -32,6 +32,8 @@ $(document).on('pagebeforeshow', '#loginpage', function() {
 	failCount = 0;
 	setLanguage();
 	$("#appname").text(PROJECT_NAME);
+	$("#username").val("");
+	$("#password").val("");
 });
 // login button click
 $(document).on(
