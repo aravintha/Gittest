@@ -1,0 +1,24 @@
+.labelfont {
+	font-weight: bold !important;
+}
+
+.listFontSize {
+	font-size: 10%;
+}
+
+.listPadding {
+	padding-left: 3%;
+}
+
+.gridMaxWidth {
+	width: 48% !important;
+}
+
+.gridMinWidth {
+	width: 4% !important;
+}
+
+.appversionpopup {
+	width: 200px !important;
+	height: 200px !important;
+}
