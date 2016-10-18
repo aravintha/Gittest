@@ -2,4 +2,4 @@ To show `assets/www` or `res/xml/config.xml`, go to:
     Project -> Properties -> Resource -> Resource Filters
 And delete the exclusion filter.
 
-Updated on October 18 2016.
+Updated on October 18 2016 at 1:32.
